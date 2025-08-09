@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: white;
+        margin: 0;
+        padding: 0;
+    }
+   
+
+ </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#" class="site-name">MySchool</a>
+            <ul class="nav-links">
+                <li><a href="#">Main</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+         <a href="{{ url_for('main') }}" class="main-button"> 
+        <i class="fa-solid fa-book-open-reader"></i>
+    </a>
+    </nav>
+  
+   <h1>Welcome, {{ current_user.full_name }}!</h1>
+   
+    <br>
+    <a href="{{ url_for('logout') }}" class="logout-button">
+        <i class="fa-solid fa-door-open"></i>
+        
+    </a>
+
+<div class="container">
+        <div class="container-left">
+            <div class="container1">
+                <h3>Calculate and Assess Class Performance Without Hassle</h3>
+                <i class="fa-solid fa-calculator"></i>
+            </div>
+            <div class="container1">
+                <h3>Track Student Progress and Achievements</h3>
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+        </div>
+
+
+        <div class="img">
+           <img src="{{ url_for('static', filename='freepik_assistant_1753142183551.png') }}" alt="">
+        </div>
+
+        <div class="container-right">
+            <div class="container2">
+                <i class="fa-solid fa-chalkboard-teacher"></i>
+                <h3>Engage Students with Interactive Learning</h3>
+               
+            </div>
+            <div class="container2">
+                <i class="fa-solid fa-comments"></i>
+                <h3>Provide Real-time Feedback and Support</h3>
+                
+            </div>
+        </div>
+
+       
+
+
+    </div>
+
+    <div class="content">
+        <h1>Easy Way To Calculate Student Report without Stress(GES STANDARD)</h1>
+        <p>MySchool is a web application designed to simplify the process of calculating student reports. It allows teachers to input student scores, calculate averages, and generate reports with ease.</p>
+        <p>With MySchool, you can:</p>
+        <ul>
+            <li>Input student scores quickly</li>
+            <li>Calculate averages automatically</li>
+            <li>Generate detailed reports</li>
+            <li>Track student performance over time</li>
+        </ul>
+    </div>
+
+<section class="footer">
+      <div class="footer-row">
+        <div class="footer-col">
+          <h4>Info</h4>
+          <ul class="links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Compressions</a></li>
+            <li><a href="#">Customers</a></li>
+            <li><a href="#">Service</a></li>
+            <li><a href="#">Collection</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul class="links">
+            <li><a href="#">Free Designs</a></li>
+            <li><a href="#">Latest Designs</a></li>
+            <li><a href="#">Themes</a></li>
+            <li><a href="#">Popular Designs</a></li>
+            <li><a href="#">Art Skills</a></li>
+            <li><a href="#">New Uploads</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul class="links">
+            <li><a href="#">Customer Agreement</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">GDPR</a></li>
+            <li><a href="#">Security</a></li>
+            <li><a href="#">Testimonials</a></li>
+            <li><a href="#">Media Kit</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Newsletter</h4>
+          <p>
+            Subscribe to our newsletter for a weekly dose
+            of news, updates, helpful tips, and
+            exclusive offers.
+          </p>
+          <!-- <form action="#"> -->
+            <!-- <input type="text" placeholder="Your email" required> -->
+            <!-- <button type="submit">SUBSCRIBE</button> -->
+          </form>
+          <div class="icons">
+            <i class="fa-brands fa-facebook-f"></i>
+            <i class="fa-brands fa-twitter"></i>
+            <i class="fa-brands fa-linkedin"></i>
+            <i class="fa-brands fa-github"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+   
+</body>
+</html>

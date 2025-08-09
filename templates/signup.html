@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+
+    <!-- ✅ CORRECTED: use double curly braces to evaluate Jinja expression -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- ✅ Set form action properly -->
+    <form action="{{ url_for('signup') }}" method="post">
+        <div class="log">
+            <h1>Sign Up</h1>
+
+            <!-- ✅ Fixed Jinja logic for flashed messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+        </div>
+
+        <div class="log">
+            <label for="full_name">Full Name:</label>
+            <input type="text" id="full_name" name="full_name" required><br><br>
+        </div>
+
+        <div class="log">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+        </div>
+
+        <div class="log">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+        </div>
+
+        <div class="log">
+            <button class="logbtn" type="submit">Sign up</button>
+        </div>
+
+        <div class="link">
+            Already have an account? <a href="{{ url_for('login') }}">Login</a>
+        </div>
+    </form>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

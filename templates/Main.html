@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Scores</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fb;
+      color: #222;
+    }
+
+    .navbar {
+      background: #2d3e50;
+      padding: 0.8em 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .navbar-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2em;
+    }
+
+    .site-name {
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.5em;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2em;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.1em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #ffb347;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 2.5em auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+      padding: 2em 2.5em;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2d3e50;
+      margin-bottom: 1.5em;
+    }
+
+    label {
+      display: block;
+      margin-top: 1.2em;
+      margin-bottom: 0.3em;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.7em;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      font-size: 1em;
+      background: #f9fafb;
+      transition: border 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border: 1.5px solid #2d3e50;
+      outline: none;
+    }
+
+    button#addScoreBtn {
+      display: block;
+      width: 100%;
+      margin-top: 2em;
+      padding: 0.9em;
+      background: #2d3e50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button#addScoreBtn:hover {
+      background: #ffb347;
+      color: #2d3e50;
+    }
+
+    table {
+      width: 95%;
+      margin: 2em auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+    }
+
+    th, td {
+      padding: 0.8em;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #2d3e50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #b61b1b;
+      font-size: 24px;
+      text-decoration: none;
+    }
+
+    .toggle {
+      display: inline-flex;
+      gap: 20px;
+      /* align-items: center; */
+      justify-content: center;
+      /* writing-mode: vertical-rl; */
+      margin-bottom: 20px;
+    }
+
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-content">
+      <a href="#" class="site-name">MySchool</a>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Main</a></li>
+        <li><a href="{{ url_for('dash') }}">Dashboard</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="toggle">
+       <label>
+         <input type="radio" name="level" value="JHS" checked onchange="toggleSubjects()"> JHS
+       </label>
+       <label>
+         <input type="radio" name="level" value="PRIMARY" onchange="toggleSubjects()"> PRIMARY
+       </label>
+    </div>
+
+    <div id="JHS-subjects">
+      <h1>Student Scores</h1>
+
+      <label for="StudentName">Student Name</label>
+      <input type="text" id="StudentName" placeholder="Enter Student Name">
+
+      <label for="englishScore">English Score</label>
+      <input type="number" id="englishExams" placeholder="Enter English Exams Score (50%)">
+      <input type="number" id="englishClass" placeholder="Enter English Class Score (50%)">
+
+      <label for="mathScore">Math Score</label>
+      <input type="number" id="mathExams" placeholder="Enter Math Exams Score (50%)">
+      <input type="number" id="mathClass" placeholder="Enter Math Class Score (50%)">
+
+      <label for="scienceScore">Science Score</label>
+      <input type="number" id="scienceExams" placeholder="Enter Science Exams Score (50%)">
+      <input type="number" id="scienceClass" placeholder="Enter Science Class Score (50%)">
+
+      <label for="socialScore">Social Studies</label>
+      <input type="number" id="socialExams" placeholder="Enter Social Studies Exams Score (50%)">
+      <input type="number" id="socialClass" placeholder="Enter Social Studies Class Score (50%)">
+
+      <label for="Computing">Computing</label>
+      <input type="number" id="ComputingExams" placeholder="Enter Computing Exams Score (50%)">
+      <input type="number" id="ComputingClass" placeholder="Enter Computing Class Score (50%)">
+
+      <label for="Career-Tech">Career-Tech</label>
+      <input type="number" id="CareerTechExams" placeholder="Enter Career-Tech Exams Score (50%)">
+      <input type="number" id="CareerTechClass" placeholder="Enter Career-Tech Class Score (50%)">
+
+      <label for="R.M.E">R.M.E</label>
+      <input type="number" id="RMEExams" placeholder="Enter R.M.E Exams Score (50%)">
+      <input type="number" id="RMEClass" placeholder="Enter R.M.E Class Score (50%)">
+
+      <label for="History">History</label>
+      <input type="number" id="HistoryExams" placeholder="Enter History Exams Score (50%)">
+      <input type="number" id="HistoryClass" placeholder="Enter History Class Score (50%)">
+
+      <button id="addScoreBtn">Add Score</button>
+    </div>
+
+    <div id="PRIMARY-subjects" style="display: none;">
+      <h1>Student Scores</h1>
+
+      <label for="StudentName">Student Name</label>
+      <input type="text" id="StudentName" placeholder="Enter Student Name">
+
+      <label for="englishScore">English Score</label>
+      <input type="number" id="englishExams" placeholder="Enter English Exams Score (50%)">
+      <input type="number" id="englishClass" placeholder="Enter English Class Score (50%)">
+
+      
+
+     <button id="addScoreBtn">Add Score</button>
+    </div>
+
+
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>English</th>
+        <th>Math</th>
+        <th>Science</th>
+        <th>Social</th>
+        <th>ICT</th>
+        <th>Total</th>
+        <th>Average</th>
+        <th>Weighted Avg</th>
+      </tr>
+    </thead>
+    <tbody class="container"></tbody>
+  </table>
+
+  <a href="{{ url_for('dashboard') }}" class="back-button">
+   <i class="fa-solid fa-house"></i> 
+  </a>
+ 
+
+ <script>
+  
+  const students = [];
+
+function addScore() {
+    const studentName = document.getElementById('StudentName').value.trim();
+
+
+
+
+    const subjects = {
+      English: ['englishExams', 'englishClass'],
+      Math: ['mathExams', 'mathClass'],
+      Science: ['scienceExams', 'scienceClass'],
+      Social: ['socialExams', 'socialClass'],
+      ICT: ['ComputingExams', 'ComputingClass'],
+      CareerTech: ['CareerTechExams', 'CareerTechClass'],
+      RME: ['RMEExams', 'RMEClass'],
+      History: ['HistoryExams', 'HistoryClass']
+    };
+
+    const finalScores = {};
+    let totalScore = 0;
+    let subjectCount = 0;
+
+    if (!studentName) {
+      alert("Please enter the student's name.");
+      return;
+    }
+
+    for (let subject in subjects) {
+      const [examId, classId] = subjects[subject];
+      const exam = parseFloat(document.getElementById(examId).value);
+      const classScore = parseFloat(document.getElementById(classId).value);
+
+      if (isNaN(exam) || isNaN(classScore)) {
+        alert(`Please enter valid scores for ${subject}`);
+        return;
+      }
+
+      const examConverted = exam * 0.5;
+      const classConverted = classScore * 0.5;
+      const final = examConverted + classConverted;
+
+      finalScores[subject] = {
+        exam,
+        class: classScore,
+        examConverted: examConverted.toFixed(2),
+        classConverted: classConverted.toFixed(2),
+        final: final.toFixed(2)
+      };
+
+      totalScore += final;
+      subjectCount++;
+    }
+
+    const averageScore = totalScore / subjectCount;
+
+    students.push({
+      name: studentName,
+      scores: finalScores,
+      totalScore: totalScore.toFixed(2),
+      averageScore: averageScore.toFixed(2),
+      weightedAverage: averageScore.toFixed(2)
+    });
+
+    updateTable();
+    clearInputs();
+  }
+
+  
+
+
+  function clearInputs() {
+    // Get the currently visible section
+    const level = document.querySelector('input[name="level"]:checked').value;
+    const sectionId = level === "JHS" ? "JHS-subjects" : "PRIMARY-subjects";
+    const section = document.getElementById(sectionId);
+
+    // Clear all text and number inputs in that section
+    const inputs = section.querySelectorAll('input[type="text"], input[type="number"]');
+    inputs.forEach(input => input.value = '');
+  }
+
+  function updateTable() {
+  const tableBody = document.querySelector('tbody.container');
+  tableBody.innerHTML = '';
+
+  students.sort((a, b) => b.weightedAverage - a.weightedAverage);
+
+  students.forEach((student, index) => {
+    const s = student.scores;
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${student.name}</td>
+      <td>${displaySubject(s.English)}</td>
+      <td>${displaySubject(s.Math)}</td>
+      <td>${displaySubject(s.Science)}</td>
+      <td>${displaySubject(s.Social)}</td>
+      <td>${displaySubject(s.ICT)}</td>
+      <td>${student.totalScore}</td>
+      <td>${student.averageScore}</td>
+      <td>${student.weightedAverage}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+
+  input = ''
+
+  updateDashboardCards();
+  
+}
+
+function updateDashboardCards() {
+  const totalStudents = students.length;
+  const totalClassScore = students.reduce((sum, s) => sum + parseFloat(s.totalScore), 0);
+  const averageClassScore = totalStudents > 0 ? totalClassScore / totalStudents : 0;
+  const topStudent = students[0]?.name || 'N/A';
+
+  document.getElementById('totalStudents').textContent = `Total Students: ${totalStudents}`;
+  document.getElementById('totalClassScore').textContent = `Total Class Score: ${totalClassScore.toFixed(2)}`;
+  document.getElementById('averageClassScore').textContent = `Average Score: ${averageClassScore.toFixed(2)}`;
+  document.getElementById('topStudent').textContent = `Top Student: ${topStudent}`;
+}
+
+
+  function displaySubject(scoreObj) {
+    return `E: ${scoreObj.exam} (→ ${scoreObj.examConverted}), C: ${scoreObj.class} (→ ${scoreObj.classConverted}), Total: ${scoreObj.final}`;
+  }
+
+  
+  
+  
+
+
+  document.getElementById('addScoreBtn').addEventListener('click', addScore);
+</script>
+
+</body>
+</html>
