@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: myschool-web
+    name: myschool-web-app
     env: python
     plan: free
     branch: main
