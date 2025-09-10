@@ -1,0 +1,107 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<div class="content">
+    <h2>Help & Support</h2>
+    <div class="help-content">
+        <div class="help-section">
+            <h3>Frequently Asked Questions</h3>
+            <div class="faq-item">
+                <h4>How do I reset my password?</h4>
+                <p>Click on the "Forgot Password" link on the login page and follow the instructions sent to your email.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do I add a new student?</h4>
+                <p>Go to the Students section and click the "Add New Student" button.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do I generate reports?</h4>
+                <p>Navigate to the Reports section and select the type of report you'd like to generate.</p>
+            </div>
+        </div>
+        
+        <div class="support-contact">
+            <h3>Need Further Assistance?</h3>
+            <p>If you can't find what you're looking for, please contact our support team:</p>
+            <p><i class="fas fa-envelope"></i> Email: <a href="mailto:badugyautheophilus09@gmail.com">badugyautheophilus09@gmail.com</a></p>
+            <p><i class="fas fa-phone"></i> Phone: <a href="tel:+233558754275">+233 55 875 4275</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.help-content {
+    margin-top: 2rem;
+}
+
+.help-section {
+    margin-bottom: 3rem;
+}
+
+.faq-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #4CAF50;
+}
+
+.faq-item h4 {
+    color: #2d3748;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.faq-item p {
+    color: #4a5568;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.support-contact {
+    background: #f0f9ff;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.support-contact h3 {
+    color: #1a365d;
+    margin-top: 0;
+}
+
+.support-contact p {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.support-contact i {
+    color: #4CAF50;
+    margin-right: 0.75rem;
+    width: 24px;
+    text-align: center;
+}
+
+.support-contact a {
+    color: #3182ce;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.support-contact a:hover {
+    color: #2c5282;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .faq-item {
+        padding: 1.25rem;
+    }
+    
+    .support-contact {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}

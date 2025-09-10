@@ -4,145 +4,1020 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: white;
+    <style>
+    * {box-sizing: border-box;}
+    body, html {
+        padding: 0; 
         margin: 0;
-        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+    } 
+    
+    body {
+        background: #232323; 
+        color: #fff;
+        padding-top: 60px; /* Add padding to account for fixed navbar */
     }
-   
+    
+    .opaque {
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0; 
+        opacity: 0; 
+        background: #d2d6f1;
+    }
+    
+    .lt-ie9 .opaque {display: none;}
 
- </style>
+    .feature {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            background: url(https://www.the74million.org/wp-content/uploads/2019/05/segregatedclassroom.jpg) center center no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            opacity: 0.8;
+        }  
+    .content {
+        position: relative;
+        z-index: 2;
+        width: 90%;
+        max-width: 1200px;
+        margin: 2rem auto;
+        background: rgba(255, 255, 255, 0.95);
+        color: #2d3748;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-sizing: border-box;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        line-height: 1.7;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    .content h2 {
+        color: #1a365d;
+        margin-top: 2rem;
+        margin-bottom: 1.2rem;
+        font-size: 1.8em;
+        font-weight: 600;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+    }
+    
+    .content p {
+        margin-bottom: 1.2rem;
+        font-size: 1.1em;
+        color: #4a5568;
+    }
+    
+    .content ul {
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .content li {
+        margin-bottom: 0.5rem;
+        color: #4a5568;
+    }
+    
+    @media only screen and (min-width: 768px) {
+        .content {
+            width: 90%;
+            max-width: 1400px;
+            margin: 1.5rem auto;
+            padding: 2rem;
+        }
+    }
+
+
+
+        :root {
+            --primary-color: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary-color: #FFB347;
+            --text-color: #333;
+            --text-light: #666;
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-color);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #1a2a3a, #0e1620);
+            padding: 0.5rem 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .site-name {
+            color: #ffffff;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-weight: 800;
+            font-size: 1.8em;
+            letter-spacing: 2px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            margin-left: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .site-name::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .site-name:hover::after {
+            transform: scaleX(1);
+        }
+
+        .site-name:hover {
+            transform: translateY(-2px);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #2d3e50;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem 0;
+                gap: 0.5rem;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            }
+            
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .nav-links a {
+                color: white !important;
+                padding: 0.8rem 1rem !important;
+                margin: 0.2rem 1rem;
+                border-radius: 4px;
+                background: rgba(45, 55, 72, 0.9) !important;  /* Dark background for mobile */
+                border: 1px solid rgba(255, 255, 255, 0.1);  /* Subtle border for separation */
+            }
+            
+            .nav-links .main-button,
+            .nav-links .logout-button {
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                width: calc(100% - 2rem);
+                margin: 0.5rem 1rem;
+                padding: 0.8rem 1rem !important;
+                border-radius: 6px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .nav-links .main-button {
+                background-color: #4CAF50;
+                color: white !important;
+            }
+            
+            .nav-links .logout-button {
+                background-color: #f44336;
+                color: white !important;
+            }
+            
+            .desktop-buttons {
+                display: flex;
+                gap: 1rem;
+            }
+            
+            @media (max-width: 768px) {
+                .desktop-buttons {
+                    display: none;
+                }
+                
+                .mobile-only {
+                    display: block !important;
+                }
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #2d3748;  /* Dark color for better visibility */
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            margin: 3px 0;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #1a365d !important;  /* Dark blue for better contrast */
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;  /* Slightly bolder */
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            display: block;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.95);  /* Slightly more opaque white */
+            margin: 0 0.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+        }
+        
+        .nav-links a.active {
+            background: #4CAF50 !important;
+            color: white !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-links a:hover {
+            color: #1a202c;  /* Even darker on hover */
+            background: rgba(255, 255, 255, 1);  /* Solid white on hover */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links.active {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--background-color);
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-links.active li {
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-links.active a {
+            display: block;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links.active a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-button, .logout-button {
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .main-button:hover, .logout-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+       
+        .content-wrapper {
+            margin-top: 60px;
+            min-height: calc(100vh - 60px);
+            padding: 1rem;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 20px;
+            animation: fadeIn 0.5s ease-out;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: transparent;
+            flex-wrap: wrap;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .container-left, .container-right {
+            flex: 1 1 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            width: 100%;
+            max-width: 100%;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .container1, .container2 {
+            background: var(--card-background);
+            margin: 0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .container1:hover, .container2:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .container1::before, .container2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .container1:hover::before, .container2:hover::before {
+            transform: scaleX(1);
+        }
+
+        .container1 h3, .container2 h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+        }
+
+        .container1 i, .container2 i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .container1 p, .container2 p {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .container1 ul, .container2 ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container1 ul li, .container2 ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .container1 a, .container2 a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .container1 a:hover, .container2 a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .img {
+            flex: 0 0 auto;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+            order: -1;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .img img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .img img:hover {
+            transform: scale(1.02);
+        }
+
+        .content h1 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            line-height: 1.2;
+        }
+
+        .content p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .content ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .content ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #1a2533, #0e1620);
+            color: #fff;
+            padding: 50px 0 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10; /* Ensure footer is above the background image */
+            margin-top: 50px;
+        }
+
+        .footer-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .footer h4 {
+            color: #fff;
+            margin-bottom: 25px;
+            font-size: 1.3em;
+            position: relative;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: #4CAF50;
+            border-radius: 2px;
+        }
+
+        .footer .links a {
+            color: #b3b3b3;
+            text-decoration: none;
+            transition: 0.3s;
+            display: block;
+        }
+
+        .footer .links a:hover {
+            color: #fff;
+            padding-left: 10px;
+        }
+
+        .footer .links li {
+            margin-bottom: 12px;
+            list-style: none;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .footer .links li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-size: 14px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .footer .links li:hover::before {
+            opacity: 1;
+            left: -5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #4CAF50;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #b3b3b3;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: #4CAF50;
+            width: 20px;
+            text-align: center;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b3b3b3;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .footer-col {
+                flex: 100%;
+                text-align: center;
+                padding: 0 15px 30px;
+            }
+
+            .footer h4::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+            
+            .contact-info {
+                text-align: center;
+            }
+            
+            .contact-info p {
+                justify-content: center;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-wrap: nowrap;
+                align-items: flex-start;
+            }
+            
+            .container-left, .container-right {
+                flex: 1 1 35%;
+                max-width: 35%;
+            }
+            
+            .img {
+                flex: 0 0 30%;
+                order: 0;
+                padding: 0;
+                margin: 0;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .container {
+                flex-direction: column;
+                padding: 10px;
+                gap: 15px;
+            }
+            
+            .container-left, .container-right {
+                width: 100%;
+                max-width: 100%;
+                padding: 10px;
+            }
+            
+            .container1, .container2 {
+                padding: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .navbar-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .menu-toggle {
+                display: flex;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            
+            .content p, .content ul {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content-wrapper {
+                padding: 1rem 0.5rem;
+            }
+            
+            .container {
+                padding: 10px 5px;
+                gap: 15px;
+            }
+            
+            .container1, .container2 {
+                padding: 1rem;
+            }
+            
+            .content h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .content h2 p {
+            color: ;
+        }
+
+      
+
+    
+        
+
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar-content">
             <a href="#" class="site-name">MySchool</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <ul class="nav-links">
-                <li><a href="#">Main</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Help</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="{{ url_for('about') }}" class="nav-link {% if active_page == 'about' %}active{% endif %}">About</a></li>
+                <li><a href="{{ url_for('help') }}" class="nav-link {% if active_page == 'help' %}active{% endif %}">Help</a></li>
+                <li><a href="{{ url_for('contact') }}" class="nav-link {% if active_page == 'contact' %}active{% endif %}">Contact</a></li>
+                <li class="mobile-only">
+                    <a href="{{ url_for('main') }}" class="main-button">
+                        <i class="fa-solid fa-book-open-reader"></i> Main
+                    </a>
+                </li>
+                <li class="mobile-only">
+                    <a href="{{ url_for('logout') }}" class="logout-button">
+                        <i class="fa-solid fa-door-open"></i> Logout
+                    </a>
+                </li>
+            </ul>
+    </nav>
+
+    
+<div class="feature"></div>
+<div class="content">
+    {% block content %}
+
+    <h2>About the System</h2>
+  <p>
+    This system is designed to streamline the process of recording, calculating, and managing student exam scores and class reports. With an intuitive interface and automated grade computation, it eliminates the need for manual spreadsheets and reduces the chance of human error.
+  </p>
+  <p>
+    Teachers can enter exam results, view detailed performance analytics, and generate printable report cards for each student. The system supports multiple grading scales, subject categories, and class levels—making it flexible for primary, secondary, and higher education institutions.
+  </p>
+   <p>
+    Administrators have access to centralized data management tools, performance dashboards, and real-time insights into class-wide and individual student performance. This improves decision-making, accountability, and transparency across the academic board.
+  </p>
+
+  <h2>Key Features</h2>
+  <p>
+    • Secure login for teachers and administrators<br />
+    • Easy input and update of exam scores and assessments<br />
+    • Automatic grade calculation based on customizable criteria<br />
+    • Real-time class and student performance summaries<br />
+    • Generation of PDF report cards for each term or session<br />
+    • Export and backup of all academic records<br />
+    • Support for cumulative, average, and weighted score systems<br />
+  </p>
+  <p>
+    The system is mobile-friendly and cloud-based, ensuring access from anywhere. Whether you're managing a single classroom or an entire school, this tool helps you stay organized, efficient, and focused on student success.
+  </p>
+
+
+        
+
+    </div>
+    {% endblock %}
+</body>
+</html>
+
+
+
+<script>
+    $(function(){
+    zoom = $('.feature').css('background-size')
+    zoom = parseFloat(zoom)/100
+    size = zoom * $('.feature').width();
+    $(window).on('scroll', function(){
+      fromTop = $(window).scrollTop();
+      newSize = size - (fromTop/3);
+      if (newSize > $('.feature').width()) {
+          $('.feature').css({
+              '-webkit-background-size': newSize,
+              '-moz-background-size': newSize,
+              '-o-background-size': newSize,
+              'background-size': newSize,
+              '-webkit-filter':'blur('+ 0 + (fromTop/100) + 'px)',
+              'opacity': 1 - ((fromTop / $('html').height()) * 1.3)
+          });
+      }
+    });
+ });
+
+ $(function (){
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    var isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+
+    if (isChrome || isSafari) {
+    } else {
+        $('.feature').append('<div class="opaque"></div>');
+        $(window).on('scroll', function(){
+            var opacity = 0 + ($(window).scrollTop()/5000);
+            $('.opaque').css('opacity', opacity);
+        });
+    }
+ });
+</script>
+
+      
+        <div class="content">
+            <h1>Easy Way To Calculate Student Report without Stress(GES STANDARD)</h1>
+            <p>MySchool is a web application designed to simplify the process of calculating student reports. It allows teachers to input student scores, calculate averages, and generate reports with ease.</p>
+            <p>With MySchool, you can:</p>
+            <ul>
+                <li>Input student scores quickly</li>
+                <li>Calculate averages automatically</li>
+                <li>Generate detailed reports</li>
+                <li>Track student performance over time</li>
             </ul>
         </div>
-
-         <a href="{{ url_for('main') }}" class="main-button"> 
-        <i class="fa-solid fa-book-open-reader"></i>
-    </a>
-    </nav>
-  
-   <h1>Welcome, {{ current_user.full_name }}!</h1>
-   
-    <br>
-    <a href="{{ url_for('logout') }}" class="logout-button">
-        <i class="fa-solid fa-door-open"></i>
-        
-    </a>
-
-<div class="container">
-        <div class="container-left">
-            <div class="container1">
-                <h3>Calculate and Assess Class Performance Without Hassle</h3>
-                <i class="fa-solid fa-calculator"></i>
-            </div>
-            <div class="container1">
-                <h3>Track Student Progress and Achievements</h3>
-                <i class="fa-solid fa-chart-line"></i>
-            </div>
-        </div>
-
-
-        <div class="img">
-           <img src="{{ url_for('static', filename='freepik_assistant_1753142183551.png') }}" alt="">
-        </div>
-
-        <div class="container-right">
-            <div class="container2">
-                <i class="fa-solid fa-chalkboard-teacher"></i>
-                <h3>Engage Students with Interactive Learning</h3>
-               
-            </div>
-            <div class="container2">
-                <i class="fa-solid fa-comments"></i>
-                <h3>Provide Real-time Feedback and Support</h3>
-                
-            </div>
-        </div>
-
-       
-
-
     </div>
 
-    <div class="content">
-        <h1>Easy Way To Calculate Student Report without Stress(GES STANDARD)</h1>
-        <p>MySchool is a web application designed to simplify the process of calculating student reports. It allows teachers to input student scores, calculate averages, and generate reports with ease.</p>
-        <p>With MySchool, you can:</p>
-        <ul>
-            <li>Input student scores quickly</li>
-            <li>Calculate averages automatically</li>
-            <li>Generate detailed reports</li>
-            <li>Track student performance over time</li>
-        </ul>
-    </div>
-
-<section class="footer">
-      <div class="footer-row">
-        <div class="footer-col">
-          <h4>Info</h4>
-          <ul class="links">
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Compressions</a></li>
-            <li><a href="#">Customers</a></li>
-            <li><a href="#">Service</a></li>
-            <li><a href="#">Collection</a></li>
-          </ul>
+    <footer class="footer">
+        <div class="footer-row">
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://youtube.com" target="_blank" class="social-icon">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> info@schoolsystem.edu</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Academics</a></li>
+                    <li><a href="#">Admissions</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-col">
-          <h4>Explore</h4>
-          <ul class="links">
-            <li><a href="#">Free Designs</a></li>
-            <li><a href="#">Latest Designs</a></li>
-            <li><a href="#">Themes</a></li>
-            <li><a href="#">Popular Designs</a></li>
-            <li><a href="#">Art Skills</a></li>
-            <li><a href="#">New Uploads</a></li>
-          </ul>
+        <div class="footer-bottom">
+            <p>&copy; 2025 School Management System. All rights reserved.</p>
         </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <ul class="links">
-            <li><a href="#">Customer Agreement</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">GDPR</a></li>
-            <li><a href="#">Security</a></li>
-            <li><a href="#">Testimonials</a></li>
-            <li><a href="#">Media Kit</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Newsletter</h4>
-          <p>
-            Subscribe to our newsletter for a weekly dose
-            of news, updates, helpful tips, and
-            exclusive offers.
-          </p>
-          <!-- <form action="#"> -->
-            <!-- <input type="text" placeholder="Your email" required> -->
-            <!-- <button type="submit">SUBSCRIBE</button> -->
-          </form>
-          <div class="icons">
-            <i class="fa-brands fa-facebook-f"></i>
-            <i class="fa-brands fa-twitter"></i>
-            <i class="fa-brands fa-linkedin"></i>
-            <i class="fa-brands fa-github"></i>
-          </div>
-        </div>
-      </div>
-    </section>
-   
+    </footer>
+    
+    <script>
+        // Mobile menu toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                });
+            }
+            
+            // Close menu when clicking on a nav link
+            const navItems = document.querySelectorAll('.nav-links a');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -6,6 +6,62 @@
   <title>Student Scores</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+    .course-select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      height: 200px;
+    }
+
+    .course-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .score-display {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .final-score {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-bottom: 5px;
+    }
+
+    .score-breakdown {
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .score-breakdown span {
+      margin-bottom: 3px;
+      display: block;
+    }
+
+    .score-percentage-toggle {
+      margin-bottom: 15px;
+    }
+
+    .score-percentage-toggle select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .course-select option {
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .multi-select-container {
+      margin-bottom: 10px;
+    }
     body {
       margin: 0;
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -36,12 +92,44 @@
       text-decoration: none;
     }
 
+    .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: white;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
     .nav-links {
       list-style: none;
       display: flex;
       gap: 2em;
       margin: 0;
       padding: 0;
+      transition: all 0.3s ease;
     }
 
     .nav-links a {
@@ -114,6 +202,26 @@
       color: #2d3e50;
     }
 
+    button#addScoreBtn-primary {
+      display: block;
+      width: 100%;
+      margin-top: 2em;
+      padding: 0.9em;
+      background: #2d3e50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button#addScoreBtn-primary:hover {
+      background: #ffb347;
+      color: #2d3e50;
+    }
+
     table {
       width: 95%;
       margin: 2em auto;
@@ -155,13 +263,77 @@
       margin-bottom: 20px;
     }
 
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .modal-message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .success-message {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <div class="navbar-content">
       <a href="#" class="site-name">MySchool</a>
+      <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
       <ul class="nav-links">
+        <li class="mobile-buttons">
+          <a href="{{ url_for('dashboard') }}" class="main-button">
+            <i class="fa-solid fa-chart-line"></i> Dashboard
+          </a>
+          <a href="{{ url_for('logout') }}" class="logout-button">
+            <i class="fa-solid fa-door-open"></i> Logout
+          </a>
+        </li>
         <li><a href="#">Home</a></li>
         <li><a href="#">Main</a></li>
         <li><a href="{{ url_for('dash') }}">Dashboard</a></li>
@@ -173,10 +345,10 @@
   <div class="container">
     <div class="toggle">
        <label>
-         <input type="radio" name="level" value="JHS" checked onchange="toggleSubjects()"> JHS
+         <input type="radio" name="level" value="JHS" checked> JHS
        </label>
        <label>
-         <input type="radio" name="level" value="PRIMARY" onchange="toggleSubjects()"> PRIMARY
+         <input type="radio" name="level" value="PRIMARY"> PRIMARY
        </label>
     </div>
 
@@ -184,59 +356,100 @@
       <h1>Student Scores</h1>
 
       <label for="StudentName">Student Name</label>
-      <input type="text" id="StudentName" placeholder="Enter Student Name">
+      <input type="text" id="StudentName" name="StudentName" placeholder="Enter Student Name">
 
-      <label for="englishScore">English Score</label>
-      <input type="number" id="englishExams" placeholder="Enter English Exams Score (50%)">
-      <input type="number" id="englishClass" placeholder="Enter English Class Score (50%)">
+      <div id="jhs-courses-container">
+        <!-- Courses will be dynamically added here -->
+      </div>
 
-      <label for="mathScore">Math Score</label>
-      <input type="number" id="mathExams" placeholder="Enter Math Exams Score (50%)">
-      <input type="number" id="mathClass" placeholder="Enter Math Class Score (50%)">
+      <div class="course-controls">
+        <div class="multi-select-container">
+          <select id="courseSelect" class="course-select" multiple>
+            <option value="English Language">English Language</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Integrated Science">Integrated Science</option>
+            <option value="Social Studies">Social Studies</option>
+            <option value="Basic Design and Technology (BDT)">Basic Design and Technology (BDT)</option>
+            <option value="Religious and Moral Education (RME)">Religious and Moral Education (RME)</option>
+            <option value="Creative Arts">Creative Arts</option>
+            <option value="Physical Education">Physical Education</option>
+            <option value="Ghanaian Language">Ghanaian Language</option>
+            <option value="French">French</option>
+          </select>
+        </div>
+        <button id="addCourseBtn" class="add-course-btn">Add Selected Courses</button>
+      </div>
 
-      <label for="scienceScore">Science Score</label>
-      <input type="number" id="scienceExams" placeholder="Enter Science Exams Score (50%)">
-      <input type="number" id="scienceClass" placeholder="Enter Science Class Score (50%)">
+      <div class="score-percentage-toggle">
+        <label>
+          Score Percentage Distribution:
+          <select id="scorePercentage">
+            <option value="50">50% Exam / 50% Class</option>
+            <option value="60">60% Exam / 40% Class</option>
+            <option value="40">40% Exam / 60% Class</option>
+            <option value="70">70% Exam / 30% Class</option>
+            <option value="30">30% Exam / 70% Class</option>
+          </select>
+        </label>
+      </div>
 
-      <label for="socialScore">Social Studies</label>
-      <input type="number" id="socialExams" placeholder="Enter Social Studies Exams Score (50%)">
-      <input type="number" id="socialClass" placeholder="Enter Social Studies Class Score (50%)">
-
-      <label for="Computing">Computing</label>
-      <input type="number" id="ComputingExams" placeholder="Enter Computing Exams Score (50%)">
-      <input type="number" id="ComputingClass" placeholder="Enter Computing Class Score (50%)">
-
-      <label for="Career-Tech">Career-Tech</label>
-      <input type="number" id="CareerTechExams" placeholder="Enter Career-Tech Exams Score (50%)">
-      <input type="number" id="CareerTechClass" placeholder="Enter Career-Tech Class Score (50%)">
-
-      <label for="R.M.E">R.M.E</label>
-      <input type="number" id="RMEExams" placeholder="Enter R.M.E Exams Score (50%)">
-      <input type="number" id="RMEClass" placeholder="Enter R.M.E Class Score (50%)">
-
-      <label for="History">History</label>
-      <input type="number" id="HistoryExams" placeholder="Enter History Exams Score (50%)">
-      <input type="number" id="HistoryClass" placeholder="Enter History Class Score (50%)">
-
-      <button id="addScoreBtn">Add Score</button>
+      <div class="button-container">
+        <button id="addScoreBtn" class="add-score-btn">Add Score</button>
+      </div>
     </div>
 
     <div id="PRIMARY-subjects" style="display: none;">
       <h1>Student Scores</h1>
 
-      <label for="StudentName">Student Name</label>
-      <input type="text" id="StudentName" placeholder="Enter Student Name">
+      <label for="StudentName-primary">Student Name</label>
+      <input type="text" id="StudentName-primary" name="StudentName-primary" placeholder="Enter Student Name">
 
-      <label for="englishScore">English Score</label>
-      <input type="number" id="englishExams" placeholder="Enter English Exams Score (50%)">
-      <input type="number" id="englishClass" placeholder="Enter English Class Score (50%)">
+      <div id="primary-courses-container">
+        <!-- Courses will be dynamically added here -->
+      </div>
 
-      
+      <div class="course-controls">
+        <div class="multi-select-container">
+          <select id="courseSelect-primary" class="course-select" multiple>
+            <option value="English Language">English Language</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Integrated Science">Integrated Science</option>
+            <option value="Social Studies">Social Studies</option>
+            <option value="Basic Design and Technology (BDT)">Basic Design and Technology (BDT)</option>
+            <option value="Religious and Moral Education (RME)">Religious and Moral Education (RME)</option>
+            <option value="Creative Arts">Creative Arts</option>
+            <option value="Physical Education">Physical Education</option>
+            <option value="Ghanaian Language">Ghanaian Language</option>
+            <option value="French">French</option>
+          </select>
+        </div>
+        <button id="addCourseBtn-primary" class="add-course-btn">Add Selected Courses</button>
+      </div>
 
-     <button id="addScoreBtn">Add Score</button>
+      <div class="score-percentage-toggle">
+        <label>
+          Score Percentage Distribution:
+          <select id="scorePercentage-primary">
+            <option value="50">50% Exam / 50% Class</option>
+            <option value="60">60% Exam / 40% Class</option>
+            <option value="40">40% Exam / 60% Class</option>
+            <option value="70">70% Exam / 30% Class</option>
+            <option value="30">30% Exam / 70% Class</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="button-container">
+        <button id="addScoreBtn-primary" class="add-score-btn">Add Score</button>
+      </div>
     </div>
 
-
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+      <div id="modalContent" class="modal-content">
+        <span class="close">&times;</span>
+      </div>
+    </div>
   </div>
 
   <table>
@@ -244,11 +457,7 @@
       <tr>
         <th>Rank</th>
         <th>Name</th>
-        <th>English</th>
-        <th>Math</th>
-        <th>Science</th>
-        <th>Social</th>
-        <th>ICT</th>
+        <!-- Course columns will be dynamically added here -->
         <th>Total</th>
         <th>Average</th>
         <th>Weighted Avg</th>
@@ -260,146 +469,764 @@
   <a href="{{ url_for('dashboard') }}" class="back-button">
    <i class="fa-solid fa-house"></i> 
   </a>
- 
 
- <script>
-  
-  const students = [];
-
-function addScore() {
-    const studentName = document.getElementById('StudentName').value.trim();
-
-
-
-
-    const subjects = {
-      English: ['englishExams', 'englishClass'],
-      Math: ['mathExams', 'mathClass'],
-      Science: ['scienceExams', 'scienceClass'],
-      Social: ['socialExams', 'socialClass'],
-      ICT: ['ComputingExams', 'ComputingClass'],
-      CareerTech: ['CareerTechExams', 'CareerTechClass'],
-      RME: ['RMEExams', 'RMEClass'],
-      History: ['HistoryExams', 'HistoryClass']
+  <script>
+    // Initialize students array and subjects
+    const students = [];
+    const defaultSubjects = {
+      JHS: ['English Language', 'Mathematics', 'Integrated Science', 'Social Studies',
+            'Basic Design and Technology (BDT)', 'Religious and Moral Education (RME)',
+            'Creative Arts', 'Physical Education', 'Ghanaian Language', 'French'],
+      PRIMARY: ['English Language', 'Mathematics', 'Integrated Science']
     };
 
-    const finalScores = {};
-    let totalScore = 0;
-    let subjectCount = 0;
+    // Initialize subjects when page loads
+    function initializeSubjects() {
+      // Load from localStorage if exists
+      const savedSubjects = JSON.parse(localStorage.getItem('subjects')) || {};
+      
+      // Initialize subjects for both sections
+      ['JHS', 'PRIMARY'].forEach(level => {
+        if (!savedSubjects[level]) {
+          // If no saved subjects for this level, use defaults
+          subjects[level] = {};
+          defaultSubjects[level].forEach(course => {
+            // Generate unique IDs
+            const examId = `${level.toLowerCase()}-exam-${inputIdCounter[level]++}`;
+            const classId = `${level.toLowerCase()}-class-${inputIdCounter[level]++}`;
+            
+            // Store subject information
+            subjects[level][course] = [examId, classId];
+          });
+        } else {
+          // Use saved subjects
+          subjects[level] = savedSubjects[level];
+        }
+      });
 
-    if (!studentName) {
-      alert("Please enter the student's name.");
-      return;
+      // Initialize input ID counters based on existing subjects
+      ['JHS', 'PRIMARY'].forEach(level => {
+        inputIdCounter[level] = Object.keys(subjects[level] || {}).length * 2;
+      });
     }
 
-    for (let subject in subjects) {
-      const [examId, classId] = subjects[subject];
-      const exam = parseFloat(document.getElementById(examId).value);
-      const classScore = parseFloat(document.getElementById(classId).value);
+    // Initialize subjects for each level
+    const subjects = {
+      JHS: {},
+      PRIMARY: {}
+    };
 
-      if (isNaN(exam) || isNaN(classScore)) {
-        alert(`Please enter valid scores for ${subject}`);
-        return;
-      }
+    // Initialize course containers
+    const courseContainers = {
+      JHS: document.getElementById('jhs-courses-container'),
+      PRIMARY: document.getElementById('primary-courses-container')
+    };
 
-      const examConverted = exam * 0.5;
-      const classConverted = classScore * 0.5;
-      const final = examConverted + classConverted;
+    // Initialize input IDs
+    let inputIdCounter = {
+      JHS: 0,
+      PRIMARY: 0
+    };
 
-      finalScores[subject] = {
-        exam,
-        class: classScore,
-        examConverted: examConverted.toFixed(2),
-        classConverted: classConverted.toFixed(2),
-        final: final.toFixed(2)
-      };
+    // Initialize event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add score buttons
+      const addScoreBtns = document.querySelectorAll('.add-score-btn');
+      addScoreBtns.forEach(btn => {
+        btn.addEventListener('click', handleAddScore);
+      });
 
-      totalScore += final;
-      subjectCount++;
-    }
+      // Toggle subjects button
+      const toggleBtns = document.querySelectorAll('input[name="level"]');
+      toggleBtns.forEach(btn => {
+        btn.addEventListener('change', handleToggle);
+      });
 
-    const averageScore = totalScore / subjectCount;
+      // Add course buttons
+      document.getElementById('addCourseBtn').addEventListener('click', () => addCourse('JHS'));
+      document.getElementById('addCourseBtn-primary').addEventListener('click', () => addCourse('PRIMARY'));
 
-    students.push({
-      name: studentName,
-      scores: finalScores,
-      totalScore: totalScore.toFixed(2),
-      averageScore: averageScore.toFixed(2),
-      weightedAverage: averageScore.toFixed(2)
+      // Initialize the first section
+      handleToggle();
+
+      // Initialize subjects
+      initializeSubjects();
+      initializeDefaultSubjects();
     });
 
-    updateTable();
-    clearInputs();
-  }
+    function handleAddScore() {
+      try {
+        // Get current section
+        const currentSection = getCurrentSection();
+        if (!currentSection) {
+          alert("Please select a level first.");
+          return;
+        }
 
+        // Get student name
+        const studentName = getStudentName(currentSection);
+        if (!studentName) {
+          return;
+        }
+
+        // Get and validate scores
+        const scores = getScores(currentSection);
+        if (!scores) {
+          return;
+        }
+
+        // Calculate scores
+        const finalScores = calculateScores(scores);
+        
+        // Check if student already exists
+        const existingStudentIndex = students.findIndex(s => s.name === studentName);
+        
+        // Create or update student data
+        const studentData = {
+          name: studentName,
+          scores: finalScores.scores,
+          totalScore: finalScores.totalScore,
+          averageScore: finalScores.averageScore,
+          weightedAverage: finalScores.averageScore,
+          section: currentSection
+        };
+        
+        if (existingStudentIndex >= 0) {
+          // Update existing student
+          students[existingStudentIndex] = studentData;
+        } else {
+          // Add new student
+          students.push(studentData);
+        }
+
+        // Save to localStorage
+        localStorage.setItem('students', JSON.stringify(students));
+        localStorage.setItem('subjects', JSON.stringify(subjects));
+        localStorage.setItem('currentSection', currentSection);
+        localStorage.setItem('scorePercentage', document.getElementById('scorePercentage').value);
+
+        // Update UI
+        updateTable();
+        updateDashboard();
+        clearCurrentSection(currentSection);
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    }
+
+    function addCourse(level, courseName) {
+      const courseSelect = document.getElementById(`courseSelect${level === 'PRIMARY' ? '-primary' : ''}`);
+      if (!subjects[level]) {
+        subjects[level] = {};
+      }
+      const existingCourses = Object.keys(subjects[level]);
+      const addedCourses = [];
+
+      if (!courseName) {
+        const selectedOptions = Array.from(courseSelect.selectedOptions);
+        if (selectedOptions.length === 0) {
+          showErrorMessage('Please select at least one course');
+          return false;
+        }
+
+        // Filter out already added courses
+        const newCourses = selectedOptions
+          .map(option => option.value)
+          .filter(course => !existingCourses.includes(course));
+
+        if (newCourses.length === 0) {
+          showErrorMessage('Selected courses already exist');
+          return false;
+        }
+
+        // Add new courses
+        newCourses.forEach(course => {
+          if (addCourse(level, course)) {
+            addedCourses.push(course);
+          }
+        });
+        
+        // Update table if any courses were added
+        if (addedCourses.length > 0) {
+          updateTable();
+          showSuccessMessage(`Added ${addedCourses.length} courses successfully!`);
+        }
+        return addedCourses.length > 0;
+      }
+
+      if (existingCourses.includes(courseName)) {
+        return false;
+      }
+
+      // Generate unique IDs
+      const examId = `${level.toLowerCase()}-exam-${inputIdCounter[level]++}`;
+      const classId = `${level.toLowerCase()}-class-${inputIdCounter[level]++}`;
+
+      // Create course inputs
+      const courseHtml = `
+        <div class="course-section ${level.toLowerCase()}-course" data-course="${courseName}">
+          <label for="${examId}">${courseName} Score</label>
+          <input type="number" id="${examId}" name="${examId}" placeholder="Enter ${courseName} Exams Score (50%)">
+          <input type="number" id="${classId}" name="${classId}" placeholder="Enter ${courseName} Class Score (50%)">
+          <button class="remove-course-btn" onclick="removeCourse('${level}', '${courseName}')">Remove</button>
+        </div>
+      `;
+
+      // Add to DOM
+      courseContainers[level].insertAdjacentHTML('beforeend', courseHtml);
+
+      // Store subject information
+      if (!subjects[level]) {
+        subjects[level] = {};
+      }
+      subjects[level][courseName] = [examId, classId];
+      addedCourses.push(courseName);
+
+      // Reset select
+      courseSelect.selectedIndex = -1;
+
+      // Update table and headers after adding the course
+      updateTable();
+      updateTableHeaders();
+      return true;
+    }
+
+    // Modal functions
+    function showErrorMessage(message) {
+      const modal = document.getElementById('messageModal');
+      const modalContent = document.getElementById('modalContent');
+      modalContent.innerHTML = `
+        <div class="modal-message error-message">
+          <p>${message}</p>
+        </div>
+      `;
+      modal.style.display = 'block';
+    }
+
+    function showSuccessMessage(message) {
+      const modal = document.getElementById('messageModal');
+      const modalContent = document.getElementById('modalContent');
+      modalContent.innerHTML = `
+        <div class="modal-message success-message">
+          <p>${message}</p>
+        </div>
+      `;
+      modal.style.display = 'block';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('messageModal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    function removeCourse(level, courseName) {
+      // Remove from DOM
+      const courseSection = document.querySelector(`.course-section[data-course="${courseName}"]`);
+      if (courseSection) courseSection.remove();
+
+      // Remove from subjects
+      if (subjects[level]) {
+        delete subjects[level][courseName];
+        if (Object.keys(subjects[level]).length === 0) {
+          delete subjects[level];
+        }
+      }
+
+      // Update localStorage
+      localStorage.setItem('subjects', JSON.stringify(subjects));
+
+      // Update table headers
+      updateTableHeaders();
+    }
+
+    function initializeDefaultSubjects() {
+      const currentSection = getCurrentSection();
+      if (!currentSection) return;
+
+      // Initialize subjects for this section
+      if (!subjects[currentSection]) {
+        subjects[currentSection] = {};
+        defaultSubjects[currentSection].forEach(courseName => {
+          // Generate unique IDs
+          const examId = `${currentSection.toLowerCase()}-exam-${inputIdCounter[currentSection]++}`;
+          const classId = `${currentSection.toLowerCase()}-class-${inputIdCounter[currentSection]++}`;
+          
+          // Create course inputs
+          const courseHtml = `
+            <div class="course-section ${currentSection.toLowerCase()}-course" data-course="${courseName}">
+              <label for="${examId}">${courseName} Score</label>
+              <input type="number" id="${examId}" name="${examId}" placeholder="Enter ${courseName} Exams Score (50%)">
+              <input type="number" id="${classId}" name="${classId}" placeholder="Enter ${courseName} Class Score (50%)">
+              <button class="remove-course-btn" onclick="removeCourse('${currentSection}', '${courseName}')">Remove</button>
+            </div>
+          `;
+
+          // Add to DOM
+          courseContainers[currentSection].insertAdjacentHTML('beforeend', courseHtml);
+
+          // Store subject information
+          subjects[currentSection][courseName] = [examId, classId];
+        });
+      }
+
+      // Initialize input ID counter
+      inputIdCounter[currentSection] = Object.keys(subjects[currentSection]).length * 2;
+    }
+
+    function handleToggle() {
+      const currentSection = getCurrentSection();
+      if (!currentSection) return;
+
+      // Hide all sections first
+      hideAllSections();
+      
+      // Show current section
+      showSection(currentSection);
+      
+      // Clear inputs
+      clearCurrentSection(currentSection);
+      
+      // Initialize subjects for this section
+      initializeDefaultSubjects();
+      
+      // Update table headers to reflect current section's courses
+      updateTableHeaders();
+
+      // Update localStorage
+      localStorage.setItem('currentSection', currentSection);
+
+      // Save subjects to localStorage
+      localStorage.setItem('subjects', JSON.stringify(subjects));
+    }
+
+    function getCurrentSection() {
+      return document.querySelector('input[name="level"]:checked')?.value;
+    }
+
+    function getStudentName(section) {
+      const studentNameInput = document.getElementById(section === 'JHS' ? 'StudentName' : 'StudentName-primary');
+      if (!studentNameInput) {
+        throw new Error('Student name input not found');
+      }
+
+      const name = studentNameInput.value.trim();
+      if (!name) {
+        alert("Please enter the student's name.");
+        return null;
+      }
+      return name;
+    }
+
+    function getScores(section) {
+      const levelSubjects = subjects[section];
+      if (!levelSubjects) {
+        throw new Error('Subjects not found for current level');
+      }
+
+      const scores = {};
+      let hasError = false;
+
+      for (let subject in levelSubjects) {
+        const [examId, classId] = levelSubjects[subject];
+        const examInput = document.getElementById(examId);
+        const classInput = document.getElementById(classId);
+
+        if (!examInput || !classInput) {
+          throw new Error(`Input elements not found for ${subject}`);
+        }
+
+        const exam = parseFloat(examInput.value);
+        const classScore = parseFloat(classInput.value);
+
+        if (isNaN(exam) || isNaN(classScore)) {
+          alert(`Please enter valid scores for ${subject}`);
+          hasError = true;
+          break;
+        }
+
+        scores[subject] = {
+          exam,
+          class: classScore
+        };
+      }
+
+      if (hasError) return null;
+      return scores;
+    }
+
+    function calculateScores(scores) {
+      const currentSection = getCurrentSection();
+      const scorePercentage = parseInt(document.getElementById('scorePercentage').value);
+      let totalScore = 0;
+      let subjectCount = 0;
+      const finalScores = {};
+
+      // Only calculate scores for courses that exist in the current section
+      if (subjects[currentSection]) {
+        Object.entries(subjects[currentSection]).forEach(([course, [examId, classId]]) => {
+          const examInput = document.getElementById(examId);
+          const classInput = document.getElementById(classId);
+          
+          // Only process if both inputs exist and have values
+          if (examInput && classInput && examInput.value && classInput.value) {
+            const exam = parseFloat(examInput.value);
+            const classScore = parseFloat(classInput.value);
+            
+            if (!isNaN(exam) && !isNaN(classScore)) {
+              const examConverted = exam * (scorePercentage / 100);
+              const classConverted = classScore * ((100 - scorePercentage) / 100);
+              const final = examConverted + classConverted;
+
+              finalScores[course] = {
+                exam: exam,
+                class: classScore,
+                examConverted: examConverted.toFixed(2),
+                classConverted: classConverted.toFixed(2),
+                final: final.toFixed(2),
+                examPercentage: scorePercentage + '%',
+                classPercentage: (100 - scorePercentage) + '%'
+              };
+
+              totalScore += final;
+              subjectCount++;
+            }
+          }
+        });
+      }
+
+      const averageScore = subjectCount > 0 ? totalScore / subjectCount : 0;
+      return {
+        scores: finalScores,
+        totalScore: totalScore.toFixed(2),
+        averageScore: averageScore.toFixed(2)
+      };
+    }
+
+    function clearCurrentSection(section) {
+      const sectionElement = document.getElementById(`${section}-subjects`);
+      if (sectionElement) {
+        sectionElement.querySelectorAll('input').forEach(input => input.value = '');
+      }
+    }
+
+    function hideAllSections() {
+      ['JHS-subjects', 'PRIMARY-subjects'].forEach(id => {
+        const section = document.getElementById(id);
+        if (section) section.style.display = 'none';
+      });
+    }
+
+    function showSection(section) {
+      const sectionId = `${section}-subjects`;
+      const sectionElement = document.getElementById(sectionId);
+      if (sectionElement) sectionElement.style.display = 'block';
+    }
+
+    function updateTable() {
+      const tableBody = document.querySelector('tbody.container');
+      if (!tableBody) return;
+
+      // Get current section
+      const currentSection = getCurrentSection();
+      if (!currentSection) return;
+
+      // Update headers first to ensure they're in sync
+      updateTableHeaders();
+
+      // Clear existing rows
+      tableBody.innerHTML = '';
+      
+      // Filter students by current section and sort by weighted average
+      const sectionStudents = students.filter(student => student.section === currentSection);
+      const sortedStudents = [...sectionStudents].sort((a, b) => 
+        (parseFloat(b.weightedAverage) || 0) - (parseFloat(a.weightedAverage) || 0)
+      );
+
+      // Create new rows for each student
+      sortedStudents.forEach((student, index) => {
+        const row = createTableRow(student, index + 1);
+        if (row) {
+          tableBody.appendChild(row);
+        }
+      });
+
+      updateDashboard();
+    }
+
+    function createTableRow(student, rank) {
+      const row = document.createElement('tr');
+      const currentSection = getCurrentSection();
+      const courseColumns = [];
+
+      // Add course scores for each course in the current section
+      if (subjects[currentSection]) {
+        Object.keys(subjects[currentSection]).forEach(course => {
+          // Check for scores in the student's scores object
+          const score = student.scores ? student.scores[course] : null;
+          courseColumns.push(`<td>${displayScore(score)}</td>`);
+        });
+      }
+
+      // Calculate total and average scores if not already present
+      const totalScore = student.totalScore || '0.00';
+      const averageScore = student.averageScore || '0.00';
+      const weightedAverage = student.weightedAverage || '0.00';
+
+      row.innerHTML = `
+        <td>${rank}</td>
+        <td>${student.name}</td>
+        ${courseColumns.join('')}
+        <td>${totalScore}</td>
+        <td>${averageScore}</td>
+        <td>${weightedAverage}</td>
+      `;
+      return row;
+    }
+
+    function updateTableHeaders() {
+      const currentSection = getCurrentSection();
+      const headerRow = document.querySelector('thead tr');
+      if (!headerRow) return;
+      
+      // Keep only the first two and last three columns (Rank, Name, Total, Average, Position)
+      const headerCells = Array.from(headerRow.querySelectorAll('th'));
+      
+      // Remove all columns except the first two and last three
+      headerCells.forEach((th, index) => {
+        if (index >= 2 && index < headerCells.length - 3) {
+          headerRow.removeChild(th);
+        }
+      });
+
+      // Add course columns
+      if (subjects[currentSection]) {
+        // Get unique course names
+        const uniqueCourses = [...new Set(Object.keys(subjects[currentSection]))];
+        
+        // Find the position to insert new columns (before the last three columns)
+        const insertPosition = Math.max(headerRow.children.length - 3, 2);
+        
+        uniqueCourses.forEach(course => {
+          const th = document.createElement('th');
+          th.textContent = course;
+          headerRow.insertBefore(th, headerRow.children[insertPosition]);
+        });
+      }
+    }
+
+    function displayScore(scoreObj) {
+      if (!scoreObj) return '';
+      return `
+        <div class="score-display">
+          <span class="final-score">${scoreObj.final}</span>
+          <div class="score-breakdown">
+            <span>Exam (${scoreObj.examPercentage}): ${scoreObj.examConverted}</span>
+            <span>Class (${scoreObj.classPercentage}): ${scoreObj.classConverted}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateDashboard() {
+      const totalStudents = students.length;
+      const totalClassScore = students.reduce((sum, s) => sum + parseFloat(s.totalScore), 0);
+      const averageClassScore = totalStudents > 0 ? totalClassScore / totalStudents : 0;
+      const topStudent = students[0]?.name || 'N/A';
+
+      updateDashboardCard('totalStudents', `Total Students: ${totalStudents}`);
+      updateDashboardCard('totalClassScore', `Total Class Score: ${totalClassScore.toFixed(2)}`);
+      updateDashboardCard('averageClassScore', `Average Score: ${averageClassScore.toFixed(2)}`);
+      updateDashboardCard('topStudent', `Top Student: ${topStudent}`);
+    }
+
+    function updateDashboardCard(id, text) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = text;
+    }
+  </script>
   
+  <script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+        
+        // Close menu when clicking on a nav link
+        const navItems = document.querySelectorAll('.nav-links a:not(.main-button):not(.logout-button)');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    });
+  </script>
 
-
-  function clearInputs() {
-    // Get the currently visible section
-    const level = document.querySelector('input[name="level"]:checked').value;
-    const sectionId = level === "JHS" ? "JHS-subjects" : "PRIMARY-subjects";
-    const section = document.getElementById(sectionId);
-
-    // Clear all text and number inputs in that section
-    const inputs = section.querySelectorAll('input[type="text"], input[type="number"]');
-    inputs.forEach(input => input.value = '');
-  }
-
-  function updateTable() {
-  const tableBody = document.querySelector('tbody.container');
-  tableBody.innerHTML = '';
-
-  students.sort((a, b) => b.weightedAverage - a.weightedAverage);
-
-  students.forEach((student, index) => {
-    const s = student.scores;
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${student.name}</td>
-      <td>${displaySubject(s.English)}</td>
-      <td>${displaySubject(s.Math)}</td>
-      <td>${displaySubject(s.Science)}</td>
-      <td>${displaySubject(s.Social)}</td>
-      <td>${displaySubject(s.ICT)}</td>
-      <td>${student.totalScore}</td>
-      <td>${student.averageScore}</td>
-      <td>${student.weightedAverage}</td>
-    `;
-    tableBody.appendChild(row);
-  });
-
-  input = ''
-
-  updateDashboardCards();
+  <style>
+    @media (max-width: 767px) {
+        .navbar-content {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 1rem;
+        }
+        
+        .menu-toggle {
+            display: flex;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .nav-links {
+            display: none;
+            width: 100%;
+            margin-top: 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .nav-links.active {
+            display: flex;
+        }
+        
+        .mobile-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+        }
+        
+        .mobile-buttons .main-button,
+        .mobile-buttons .logout-button {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .desktop-buttons {
+            display: none;
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .mobile-buttons {
+            display: none;
+        }
+        
+        .desktop-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+    }
+    
+    .main-button, .logout-button {
+        background: #2196F3;
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .main-button:hover, .logout-button:hover {
+        background: #1976D2;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    /* Footer styles */
+    html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      position: relative; /* Add this to establish a stacking context */
+    }
+    .content {
+      flex: 1 0 auto;
+      padding-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      /* Ensure content stays behind the footer */
+      position: relative;
+      z-index: 0;
+    }
+    .footer {
+      flex-shrink: 0;
+      background: #2d3e50;
+      color: white;
+      padding: 1.5em 0;
+      width: 100%;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1000; /* Increased z-index to ensure it's above all other elements */
+      margin-top: auto; /* Pushes footer to bottom */
+    }
+    @media (min-width: 1200px) {
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <!-- All your existing content here -->
+    <nav class="navbar">
+      <!-- Navbar content -->
+    </nav>
+    <!-- Rest of your content -->
+  </div>
   
-}
-
-function updateDashboardCards() {
-  const totalStudents = students.length;
-  const totalClassScore = students.reduce((sum, s) => sum + parseFloat(s.totalScore), 0);
-  const averageClassScore = totalStudents > 0 ? totalClassScore / totalStudents : 0;
-  const topStudent = students[0]?.name || 'N/A';
-
-  document.getElementById('totalStudents').textContent = `Total Students: ${totalStudents}`;
-  document.getElementById('totalClassScore').textContent = `Total Class Score: ${totalClassScore.toFixed(2)}`;
-  document.getElementById('averageClassScore').textContent = `Average Score: ${averageClassScore.toFixed(2)}`;
-  document.getElementById('topStudent').textContent = `Top Student: ${topStudent}`;
-}
-
-
-  function displaySubject(scoreObj) {
-    return `E: ${scoreObj.exam} (→ ${scoreObj.examConverted}), C: ${scoreObj.class} (→ ${scoreObj.classConverted}), Total: ${scoreObj.final}`;
-  }
-
-  
-  
-  
-
-
-  document.getElementById('addScoreBtn').addEventListener('click', addScore);
-</script>
-
+  <footer class="footer">
+    <div class="footer-inner" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <div style="flex: 1; min-width: 200px; margin-bottom: 1em;">
+        <h3 style="color: #ffb347; margin-top: 0;">MySchool</h3>
+        <p>Providing quality education for a better future.</p>
+      </div>
+      <div style="flex: 1; min-width: 200px; margin-bottom: 1em;">
+        <h4 style="color: #ffb347; margin-top: 0;">Quick Links</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li><a href="#" style="color: white; text-decoration: none; line-height: 1.8;">Home</a></li>
+          <li><a href="#" style="color: white; text-decoration: none; line-height: 1.8;">Dashboard</a></li>
+          <li><a href="#" style="color: white; text-decoration: none; line-height: 1.8;">Contact Us</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px; margin-bottom: 1em;">
+        <h4 style="color: #ffb347; margin-top: 0;">Contact Us</h4>
+        <p>Email: info@myschool.edu.gh</p>
+        <p>Phone: +233 24 123 4567</p>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 2em; padding-top: 1em; border-top: 1px solid rgba(255,255,255,0.1);">
+      <p style="margin: 0; font-size: 0.9em;">&copy; 2025 MySchool. All rights reserved.</p>
+    </div>
+  </footer>
 </body>
 </html>
