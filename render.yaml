@@ -9,4 +9,7 @@ services:
     envVars:
       - key: FLASK_ENV
         value: production
-
+      - key: SECRET_KEY
+        value: your-secret-key
+      - key: DATABASE_URL
+        value: postgresql://school_91ei_user:pAssw0rdXYZ123@dpg-d30r7jer433s738f68jg-a.oregon-postgres.render.com/school_91ei
