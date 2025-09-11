@@ -45,17 +45,19 @@ def create_app():
         if database_url.startswith('postgres://'):
             database_url = database_url.replace('postgres://', 'postgresql+psycopg2://', 1)
         
-        # Configure SSL for PostgreSQL
-        if '?' in database_url:
-            database_url += '&sslmode=require'
-        else:
-            database_url += '?sslmode=require'
-            
-        # Add connection timeout and retry settings
-        if '?' in database_url:
-            database_url += '&connect_timeout=10&keepalives=1&keepalives_idle=30&keepalives_interval=10&keepalives_count=5'
-        else:
-            database_url += '?connect_timeout=10&keepalives=1&keepalives_idle=30&keepalives_interval=10&keepalives_count=5'
+        # Configure SQLAlchemy engine options
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+            'pool_pre_ping': True,
+            'pool_recycle': 300,
+            'connect_args': {
+                'connect_timeout': 10,
+                'keepalives': 1,
+                'keepalives_idle': 30,
+                'keepalives_interval': 10,
+                'keepalives_count': 5,
+                'sslmode': 'require'
+            }
+        }
             
         app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     else:
@@ -137,7 +139,23 @@ def load_user(user_id):
 # ----------------------------
 @app.errorhandler(500)
 def handle_500(e):
-    logger.error(f"Internal Server Error: {e}")
+    import traceback
+    error_traceback = traceback.format_exc()
+    logger.error(f"500 Error: {str(e)}\n{error_traceback}")
+    
+    # Log the database URL (without password)
+    db_url = app.config.get('SQLALCHEMY_DATABASE_URI', 'Not set')
+    if db_url and '@' in db_url:
+        db_url = db_url.split('@')[-1]
+    logger.error(f"Database URL: {db_url}")
+    
+    # Return a more detailed error in development, generic in production
+    if app.config.get('FLASK_ENV') == 'development':
+        return jsonify({
+            "error": "Internal Server Error",
+            "message": str(e),
+            "traceback": error_traceback.split('\n')
+        }), 500
     return jsonify({"error": "Internal Server Error"}), 500
 
 # ----------------------------
