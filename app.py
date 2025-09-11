@@ -8,6 +8,10 @@ from flask_migrate import Migrate
 import logging
 import os
 import bcrypt
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # ----------------------------
 # Configure Logging
@@ -22,9 +26,8 @@ logger = logging.getLogger(__name__)
 # Flask App Setup
 # ----------------------------
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL', 'postgresql+psycopg2://postgres:Theo123@localhost:5432/school'
-)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "mysecretkey")
 app.config['SESSION_PERMANENT'] = False
