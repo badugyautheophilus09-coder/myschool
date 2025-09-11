@@ -51,6 +51,12 @@ def create_app():
         else:
             database_url += '?sslmode=require'
             
+        # Add connection timeout and retry settings
+        if '?' in database_url:
+            database_url += '&connect_timeout=10&keepalives=1&keepalives_idle=30&keepalives_interval=10&keepalives_count=5'
+        else:
+            database_url += '?connect_timeout=10&keepalives=1&keepalives_idle=30&keepalives_interval=10&keepalives_count=5'
+            
         app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = database_url
