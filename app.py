@@ -45,17 +45,25 @@ def create_app():
         if database_url.startswith('postgres://'):
             database_url = database_url.replace('postgres://', 'postgresql+psycopg2://', 1)
         
-        # Configure SQLAlchemy engine options
+        # Add SSL mode to the connection string
+        if '?' in database_url:
+            database_url += '&sslmode=require'
+        else:
+            database_url += '?sslmode=require'
+            
+        # Configure SQLAlchemy engine options with connection pooling
         app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
             'pool_pre_ping': True,
-            'pool_recycle': 300,
+            'pool_recycle': 300,  # Recycle connections after 5 minutes
+            'pool_size': 5,       # Maintain up to 5 connections
+            'max_overflow': 10,   # Allow up to 15 total connections
+            'pool_timeout': 30,   # Wait up to 30 seconds for a connection
             'connect_args': {
                 'connect_timeout': 10,
                 'keepalives': 1,
                 'keepalives_idle': 30,
                 'keepalives_interval': 10,
-                'keepalives_count': 5,
-                'sslmode': 'require'
+                'keepalives_count': 5
             }
         }
             
@@ -83,9 +91,22 @@ def create_app():
     
     # Import and register blueprints here if you have any
     
-    # Create tables
+    # Create tables and verify connection when the app starts
     with app.app_context():
-        db.create_all()
+        try:
+            # Test the connection first
+            conn = db.engine.connect()
+            conn.execute('SELECT 1')
+            conn.close()
+            
+            # Then create tables if they don't exist
+            db.create_all()
+            app.logger.info('Database initialization successful')
+            
+        except Exception as e:
+            app.logger.error(f'Database initialization failed: {str(e)}')
+            # Don't raise here to allow the app to start
+            # The error will be caught when the first request tries to use the database
     
     # Fix for SameSite Partitioned cookies
     original_set_cookie = Response.set_cookie
