@@ -94,14 +94,18 @@ def create_app():
     # Create tables and verify connection when the app starts
     with app.app_context():
         try:
-            # Test the connection first
+            # Create all tables
+            db.create_all()
+            
+            # Test the connection
             conn = db.engine.connect()
             conn.execute('SELECT 1')
             conn.close()
             
-            # Then create tables if they don't exist
-            db.create_all()
-            app.logger.info('Database initialization successful')
+            # Verify tables exist
+            inspector = db.inspect(db.engine)
+            tables = inspector.get_table_names()
+            app.logger.info(f'Database initialized with tables: {tables}')
             
         except Exception as e:
             app.logger.error(f'Database initialization failed: {str(e)}')
@@ -284,7 +288,12 @@ def logout():
 # ----------------------------
 # Run App
 # ----------------------------
-if __name__ == '__main__':
+def create_tables():
+    """Manually create database tables."""
     with app.app_context():
-        db.create_all()  # makes sure tables exist
+        db.create_all()
+        print("Database tables created successfully!")
+
+if __name__ == '__main__':
+    create_tables()
     app.run(debug=True)
