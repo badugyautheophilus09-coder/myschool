@@ -37,7 +37,24 @@ def create_app():
     app = Flask(__name__)
     
     # Load configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///school.db')
+    database_url = os.getenv('DATABASE_URL', 'sqlite:///school.db')
+    
+    # Configure PostgreSQL with SSL for production
+    if database_url.startswith('postgres'):
+        # Convert postgres:// to postgresql:// for SQLAlchemy
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql+psycopg2://', 1)
+        
+        # Configure SSL for PostgreSQL
+        if '?' in database_url:
+            database_url += '&sslmode=require'
+        else:
+            database_url += '?sslmode=require'
+            
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
     
