@@ -23,31 +23,59 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ----------------------------
-# Flask App Setup
+# Initialize extensions
 # ----------------------------
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "mysecretkey")
-app.config['SESSION_PERMANENT'] = False
-
-# Fix for SameSite Partitioned cookies
-original_set_cookie = Response.set_cookie
-def set_cookie_without_partitioned(self, *args, **kwargs):
-    if 'Partitioned' in (kwargs.get('samesite') or ''):
-        kwargs['samesite'] = None
-    original_set_cookie(self, *args, **kwargs)
-Response.set_cookie = set_cookie_without_partitioned
-
-# ----------------------------
-# Database + Login Manager
-# ----------------------------
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-login_manager = LoginManager(app)
+db = SQLAlchemy()
+migrate = Migrate()
+login_manager = LoginManager()
 login_manager.login_view = 'login'
+
+# ----------------------------
+# Application Factory
+# ----------------------------
+def create_app():
+    app = Flask(__name__)
+    
+    # Load configuration
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///school.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
+    
+    # Ensure the database URI is set
+    if not app.config['SQLALCHEMY_DATABASE_URI']:
+        raise ValueError("No database URL set. Please set the DATABASE_URL environment variable.")
+    
+    # Log the database URL (without password for security)
+    db_url = app.config['SQLALCHEMY_DATABASE_URI']
+    if db_url:
+        safe_url = db_url.split('@')[-1] if '@' in db_url else db_url
+        app.logger.info(f'Using database: {safe_url}')
+    
+    # Initialize extensions with app
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
+    
+    # Import and register blueprints here if you have any
+    
+    # Create tables
+    with app.app_context():
+        db.create_all()
+    
+    # Fix for SameSite Partitioned cookies
+    original_set_cookie = Response.set_cookie
+    def set_cookie_without_partitioned(self, *args, **kwargs):
+        if 'Partitioned' in (kwargs.get('samesite') or ''):
+            kwargs['samesite'] = None
+        return original_set_cookie(self, *args, **kwargs)
+    Response.set_cookie = set_cookie_without_partitioned
+    
+    return app
+
+# ----------------------------
+# Create Flask Application
+# ----------------------------
+app = create_app()
 
 # ----------------------------
 # Database Models
